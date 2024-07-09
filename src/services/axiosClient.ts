@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from "@/utils/storage";
 const axiosClient = axios.create({
-  baseURL: process.env.VITE_URL_PRODUCTION,
+  baseURL: "https://server-hrdept-test.onrender.com/",
 });
 
 // Add a request interceptor
