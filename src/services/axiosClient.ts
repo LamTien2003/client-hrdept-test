@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from "@/utils/storage";
 const axiosClient = axios.create({
-  baseURL: "http://localhost:3000/",
+  baseURL: process.env.VITE_URL_PRODUCTION,
 });
 
 // Add a request interceptor
