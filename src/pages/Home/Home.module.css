@@ -1,0 +1,29 @@
+.wrapper {
+  text-align: center;
+  padding: 30px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.main-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.main-head__action {
+  display: flex;
+  gap: 0.4rem;
+}
+.main__search {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}

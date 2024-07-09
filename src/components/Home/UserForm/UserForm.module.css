@@ -1,0 +1,33 @@
+.user {
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+}
+
+.user-left__info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-right: 1px solid #ccc;
+  padding-right: 2rem;
+}
+
+.user-right {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .user {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2rem;
+  }
+  .user-left__info {
+    grid-template-columns: 1fr;
+  }
+}

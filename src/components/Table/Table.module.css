@@ -1,0 +1,14 @@
+.wrapper {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header-column__addon {
+  cursor: pointer;
+}
