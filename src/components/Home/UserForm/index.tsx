@@ -1,9 +1,7 @@
 import { Avatar, Dialog, Text } from "@radix-ui/themes";
 import { useMemo, useState } from "react";
 
-import Button from "@/components/Button/Button";
-import Input from "@/components/Input/Input";
-import { Select } from "@/components/Select";
+import { Button, Input, Select } from "@/components";
 
 import styles from "./UserForm.module.css";
 import { Role } from "@/types/common";

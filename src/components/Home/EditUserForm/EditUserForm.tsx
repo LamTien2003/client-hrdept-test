@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import UserForm from "@/components/Home/UserForm";
+import { UserForm } from "@/components";
 import axiosClient from "@/services/axiosClient";
 
 import EditUserFormProps from "@/components/Home/EditUserForm/EditUserForm.d";

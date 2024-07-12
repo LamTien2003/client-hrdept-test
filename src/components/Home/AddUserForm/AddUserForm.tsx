@@ -1,12 +1,12 @@
+import * as yup from "yup";
 import { Dialog as RadixDialog } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
 import config from "@/config";
-import UserForm from "@/components/Home/UserForm";
+import { UserForm } from "@/components";
 import axiosClient from "@/services/axiosClient";
 
 const schema = yup

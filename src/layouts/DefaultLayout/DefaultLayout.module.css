@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  grid-template-columns: 1fr 14fr;
+  grid-template-columns: 1fr 20fr;
 }
 
 @media (max-width: 768px) {

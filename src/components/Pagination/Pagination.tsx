@@ -1,8 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components";
-import Select from "@/components/Select/Select";
+import { Button, Select } from "@/components";
 
 import PaginationProps from "@/components/Pagination/Pagination.d";
 import { FilterCriteria } from "@/types/common";

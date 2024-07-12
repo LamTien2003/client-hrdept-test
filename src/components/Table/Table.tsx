@@ -1,6 +1,6 @@
 import { Table as RadixTable } from "@radix-ui/themes";
 
-import Pagination from "@/components/Pagination/Pagination";
+import { Pagination } from "@/components";
 
 import styles from "./Table.module.css";
 import TableProps from "./Table.d";
@@ -63,6 +63,9 @@ const Table = ({
           })}
         </RadixTable.Body>
       </RadixTable.Root>
+      {!dataSource.length && (
+        <p className={styles["empty"]}>There are not any results</p>
+      )}
 
       <div className={styles["bottom"]}>
         <Pagination

@@ -1,15 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import { useDownloadExcel } from "react-export-table-to-excel";
 
-import { Button } from "@/components";
-import Dialog from "@/components/Dialog/Dialog";
-import AddUserForm from "@/components/Home/AddUserForm/AddUserForm";
-import EditUserForm from "@/components/Home/EditUserForm/EditUserForm";
-import Input from "@/components/Input/Input";
-import Table from "@/components/Table/Table";
-import { Select } from "@/components/Select";
+import {
+  Button,
+  Dialog,
+  AddUserForm,
+  EditUserForm,
+  Input,
+  Table,
+  Select,
+} from "@/components";
 import axiosClient from "@/services/axiosClient";
 import { buildQueryString, convertToTitleCase } from "@/utils/helper";
 
@@ -17,6 +19,7 @@ import styles from "./Home.module.css";
 import { FilterCriteria, Role, User } from "@/types/common";
 
 const Home = () => {
+  const tableRef = useRef();
   const [users, setUsers] = useState<User[]>([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [filterCriteria, setFilterCriteria] = useState<
@@ -38,7 +41,6 @@ const Home = () => {
     key: "firstName",
     ascending: true,
   });
-  const tableRef = useRef();
 
   const { handleSubmit, control } = useForm<{
     searchText: "";
@@ -55,6 +57,33 @@ const Home = () => {
     filename: "Users table",
     sheet: "Users",
   });
+
+  const onSearch = (data: any) => {
+    setFilterCriteria((prev: any) => ({
+      ...prev,
+      filters: {
+        searchText: data?.searchText || "",
+        role: data?.role || "",
+      },
+    }));
+  };
+
+  const applyFilter = useCallback(
+    (key: keyof User) => {
+      if (sorting && sorting?.key === key) {
+        return setSorting({
+          ...sorting,
+          ascending: !sorting.ascending,
+        });
+      }
+
+      setSorting({
+        key,
+        ascending: true,
+      });
+    },
+    [sorting]
+  );
 
   const dataSource = useMemo(() => {
     return users.map(item => ({
@@ -89,29 +118,66 @@ const Home = () => {
     []
   );
 
-  const onSearch = (data: any) => {
-    setFilterCriteria((prev: any) => ({
-      ...prev,
-      filters: {
-        searchText: data?.searchText || "",
-        role: data?.role || "",
+  const columns = useMemo(
+    () => [
+      {
+        label: "Email",
+        key: "Email",
       },
-    }));
-  };
-
-  const applyFilter = (key: keyof User) => {
-    if (sorting && sorting?.key === key) {
-      return setSorting({
-        ...sorting,
-        ascending: !sorting.ascending,
-      });
-    }
-
-    setSorting({
-      key,
-      ascending: true,
-    });
-  };
+      {
+        label: "Phone number",
+        key: "Phone number",
+      },
+      {
+        label: "First Name",
+        key: "First Name",
+        addon: (
+          <span onClick={() => applyFilter("firstName")}>
+            {(sorting.key !== "firstName" ||
+              (sorting?.key === "firstName" && !sorting.ascending)) && (
+              <ArrowUpIcon />
+            )}
+            {sorting?.key === "firstName" && sorting.ascending && (
+              <ArrowDownIcon />
+            )}
+          </span>
+        ),
+      },
+      {
+        label: "Last Name",
+        key: "Last Name",
+        addon: (
+          <span onClick={() => applyFilter("lastName")}>
+            {(sorting.key !== "lastName" ||
+              (sorting?.key === "lastName" && !sorting.ascending)) && (
+              <ArrowUpIcon />
+            )}
+            {sorting?.key === "lastName" && sorting.ascending && (
+              <ArrowDownIcon />
+            )}
+          </span>
+        ),
+      },
+      {
+        label: "Role",
+        key: "Role",
+        addon: (
+          <span onClick={() => applyFilter("role")}>
+            {(sorting.key !== "role" ||
+              (sorting?.key === "role" && !sorting.ascending)) && (
+              <ArrowUpIcon />
+            )}
+            {sorting?.key === "role" && sorting.ascending && <ArrowDownIcon />}
+          </span>
+        ),
+      },
+      {
+        label: "Action",
+        key: "Action",
+      },
+    ],
+    [sorting, applyFilter]
+  );
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -140,62 +206,6 @@ const Home = () => {
       }),
     ]);
   }, [sorting]);
-
-  const columns = [
-    {
-      label: "Email",
-      key: "Email",
-    },
-    {
-      label: "Phone number",
-      key: "Phone number",
-    },
-    {
-      label: "First Name",
-      key: "First Name",
-      addon: (
-        <span onClick={() => applyFilter("firstName")}>
-          {(sorting.key !== "firstName" ||
-            (sorting?.key === "firstName" && !sorting.ascending)) && (
-            <ArrowUpIcon />
-          )}
-          {sorting?.key === "firstName" && sorting.ascending && (
-            <ArrowDownIcon />
-          )}
-        </span>
-      ),
-    },
-    {
-      label: "Last Name",
-      key: "Last Name",
-      addon: (
-        <span onClick={() => applyFilter("lastName")}>
-          {(sorting.key !== "lastName" ||
-            (sorting?.key === "lastName" && !sorting.ascending)) && (
-            <ArrowUpIcon />
-          )}
-          {sorting?.key === "lastName" && sorting.ascending && (
-            <ArrowDownIcon />
-          )}
-        </span>
-      ),
-    },
-    {
-      label: "Role",
-      key: "Role",
-      addon: (
-        <span onClick={() => applyFilter("role")}>
-          {(sorting.key !== "role" ||
-            (sorting?.key === "role" && !sorting.ascending)) && <ArrowUpIcon />}
-          {sorting?.key === "role" && sorting.ascending && <ArrowDownIcon />}
-        </span>
-      ),
-    },
-    {
-      label: "Action",
-      key: "Action",
-    },
-  ];
 
   return (
     <div className={styles.wrapper}>
@@ -238,11 +248,7 @@ const Home = () => {
             dataSource={roleList}
             size="2"
           />
-          <Button
-            color="gray"
-            highContrast
-            onSubmit={handleSubmit(data => console.log(data))}
-          >
+          <Button color="gray" highContrast onSubmit={handleSubmit(onSearch)}>
             Search
           </Button>
         </form>

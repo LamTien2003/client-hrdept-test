@@ -1,5 +1,7 @@
 import axios from "axios";
 import { getToken } from "@/utils/storage";
+import { toast } from "react-toastify";
+
 const axiosClient = axios.create({
   baseURL: "https://server-hrdept-test.onrender.com/",
 });
@@ -15,6 +17,7 @@ axiosClient.interceptors.request.use(
   },
   function (error) {
     // Do something with request error
+    toast.error(error.message);
     return Promise.reject(error);
   }
 );
@@ -28,6 +31,7 @@ axiosClient.interceptors.response.use(
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
+    toast.error(error.message);
     return Promise.reject(error);
   }
 );
