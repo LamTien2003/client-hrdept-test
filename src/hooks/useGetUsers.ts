@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import axiosClient from "@/services/axiosClient";
-import { FilterCriteria, User } from "@/types/common";
 import { buildQueryString } from "@/utils/helper";
-import { toast } from "react-toastify";
+
+import { FilterCriteria, User } from "@/types/common";
 
 const useGetUsers = (filterCriteria: FilterCriteria<{ role: string }>) => {
   const [users, setUsers] = useState<User[]>([]);

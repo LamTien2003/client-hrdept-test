@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 import axiosClient from "@/services/axiosClient";
-import { useState } from "react";
 
 const useEditUser = (callback: () => void) => {
   const [isLoading, setIsLoading] = useState(false);
