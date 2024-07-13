@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import { useDownloadExcel } from "react-export-table-to-excel";
@@ -12,16 +12,14 @@ import {
   Table,
   Select,
 } from "@/components";
-import axiosClient from "@/services/axiosClient";
-import { buildQueryString, convertToTitleCase } from "@/utils/helper";
+import { convertToTitleCase } from "@/utils/helper";
 
-import styles from "./Home.module.css";
 import { FilterCriteria, Role, User } from "@/types/common";
+import useGetUsers from "@/hooks/useGetUsers";
+import styles from "./Home.module.css";
 
 const Home = () => {
   const tableRef = useRef();
-  const [users, setUsers] = useState<User[]>([]);
-  const [totalUsers, setTotalUsers] = useState(0);
   const [filterCriteria, setFilterCriteria] = useState<
     FilterCriteria<{ role: string }>
   >({
@@ -34,6 +32,7 @@ const Home = () => {
       pageSize: 5,
     },
   });
+  const { users, totalUsers, isUsersLoading } = useGetUsers(filterCriteria);
   const [sorting, setSorting] = useState<{
     key: keyof User;
     ascending: boolean;
@@ -86,7 +85,14 @@ const Home = () => {
   );
 
   const dataSource = useMemo(() => {
-    return users.map(item => ({
+    const data = users.sort((a, b) => {
+      if (!sorting.ascending) {
+        return a[sorting.key]!.localeCompare(b[sorting.key]!);
+      }
+      return b[sorting?.key]!.localeCompare(a[sorting?.key]!);
+    });
+
+    return data.map(item => ({
       email: item.email,
       phoneNumber: item.phoneNumber,
       firstName: item.firstName,
@@ -102,7 +108,7 @@ const Home = () => {
         </Dialog>
       ),
     }));
-  }, [users]);
+  }, [users, sorting]);
 
   const roleList = useMemo(
     () => [
@@ -179,34 +185,6 @@ const Home = () => {
     [sorting, applyFilter]
   );
 
-  useEffect(() => {
-    const fetchApi = async () => {
-      const queryString = buildQueryString({
-        ...filterCriteria.filters,
-        ...filterCriteria.paging,
-      });
-      const response = await axiosClient.get(`/user?${queryString}`);
-      setUsers(response?.data?.data || []);
-      setTotalUsers(response?.data?.totalItems || 0);
-    };
-    fetchApi();
-  }, [filterCriteria]);
-  console.log(dataSource);
-
-  useEffect(() => {
-    if (!sorting?.key) {
-      return;
-    }
-    setUsers(prev => [
-      ...prev.sort((a, b) => {
-        if (!sorting.ascending) {
-          return a[sorting.key]!.localeCompare(b[sorting.key]!);
-        }
-        return b[sorting?.key]!.localeCompare(a[sorting?.key]!);
-      }),
-    ]);
-  }, [sorting]);
-
   return (
     <div className={styles.wrapper}>
       <div className={styles["header"]}>
@@ -254,6 +232,7 @@ const Home = () => {
         </form>
 
         <Table
+          isLoading={isUsersLoading}
           reference={tableRef}
           totalItems={totalUsers}
           dataSource={dataSource}

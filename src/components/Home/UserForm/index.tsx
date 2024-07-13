@@ -1,4 +1,4 @@
-import { Avatar, Dialog, Text } from "@radix-ui/themes";
+import { Avatar, Dialog, Spinner, Text } from "@radix-ui/themes";
 import { useMemo, useState } from "react";
 
 import { Button, Input, Select } from "@/components";
@@ -13,6 +13,7 @@ const UserForm = ({
   formState,
   inputFileRef,
   handleSubmit,
+  isLoading = false,
 }: UserFormProps) => {
   const [previewImage, setPreviewImage] = useState(
     formState?.defaultValues?.image || ""
@@ -34,71 +35,83 @@ const UserForm = ({
   const onUpload = (e: any) => {
     const selectedFile = e.target.files[0];
     setValue("image", selectedFile);
-    console.log(formState);
     setPreviewImage(URL.createObjectURL(selectedFile));
   };
 
   return (
-    <div className={styles["user"]}>
-      <div className={styles["user-left"]}>
-        <div className={styles["user-left__info"]}>
-          <Input
-            control={control}
-            name="email"
-            placeholder="Email"
-            label="Email"
-          />
-          <Input
-            control={control}
-            name="firstName"
-            placeholder="First Name"
-            label="First Name"
-          />
-          <Input
-            control={control}
-            name="lastName"
-            placeholder="Last Name"
-            label="Last Name"
-          />
-          <Input
-            control={control}
-            name="phoneNumber"
-            placeholder="Phone Number"
-            label="Phone Number"
-          />
-
-          <Select
-            label="Role"
-            control={control}
-            name="role"
-            dataSource={roleList}
-            placeholder="Select Role"
-            size="2"
-          />
+    <>
+      {isLoading ? (
+        <div className={styles["loading"]}>
+          <Spinner />
         </div>
-        <div className="d-flex gap--12">
-          <Button color="gray" highContrast onSubmit={handleSubmit}>
-            Save
-          </Button>
-          <Dialog.Close>
-            <Button size="2" color="gray">
-              Cancel
+      ) : (
+        <div className={styles["user"]}>
+          <div className={styles["user-left"]}>
+            <div className={styles["user-left__info"]}>
+              <Input
+                control={control}
+                name="email"
+                placeholder="Email"
+                label="Email"
+              />
+              <Input
+                control={control}
+                name="firstName"
+                placeholder="First Name"
+                label="First Name"
+              />
+              <Input
+                control={control}
+                name="lastName"
+                placeholder="Last Name"
+                label="Last Name"
+              />
+              <Input
+                control={control}
+                name="phoneNumber"
+                placeholder="Phone Number"
+                label="Phone Number"
+              />
+
+              <Select
+                label="Role"
+                control={control}
+                name="role"
+                dataSource={roleList}
+                placeholder="Select Role"
+                size="2"
+              />
+            </div>
+            <div className="d-flex gap--12">
+              <Button color="gray" highContrast onSubmit={handleSubmit}>
+                Save
+              </Button>
+              <Dialog.Close>
+                <Button size="2" color="gray">
+                  Cancel
+                </Button>
+              </Dialog.Close>
+            </div>
+          </div>
+
+          <div className={styles["user-right"]}>
+            <Text as="div" size="3" mb="1" weight="bold">
+              Picture Profile
+            </Text>
+            <Avatar size="8" src={previewImage} fallback="A" />
+            <Button
+              color="gray"
+              highContrast
+              onClick={onClickUpload}
+              type="button"
+            >
+              Upload
             </Button>
-          </Dialog.Close>
+            <input ref={inputFileRef} type="file" onChange={onUpload} hidden />
+          </div>
         </div>
-      </div>
-
-      <div className={styles["user-right"]}>
-        <Text as="div" size="3" mb="1" weight="bold">
-          Picture Profile
-        </Text>
-        <Avatar size="8" src={previewImage} fallback="A" />
-        <Button color="gray" highContrast onClick={onClickUpload} type="button">
-          Upload
-        </Button>
-        <input ref={inputFileRef} type="file" onChange={onUpload} hidden />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

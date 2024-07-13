@@ -1,4 +1,4 @@
-import { Table as RadixTable } from "@radix-ui/themes";
+import { Table as RadixTable, Spinner } from "@radix-ui/themes";
 
 import { Pagination } from "@/components";
 
@@ -27,6 +27,7 @@ const Table = ({
   columns,
   dataSource,
   reference,
+  isLoading,
 }: TableProps) => {
   return (
     <div className={styles["wrapper"]} ref={reference}>
@@ -50,21 +51,24 @@ const Table = ({
         </RadixTable.Header>
 
         <RadixTable.Body>
-          {dataSource.map((row: any, index: number) => {
-            return (
-              <RadixTable.Row key={index}>
-                {Object.values(row).map((value: any, index) => (
-                  <RadixTable.RowHeaderCell key={`${value}-${index}`}>
-                    {value}
-                  </RadixTable.RowHeaderCell>
-                ))}
-              </RadixTable.Row>
-            );
-          })}
+          {!isLoading &&
+            dataSource.map((row: any, index: number) => {
+              return (
+                <RadixTable.Row key={index}>
+                  {Object.values(row).map((value: any, index) => (
+                    <RadixTable.RowHeaderCell key={`${value}-${index}`}>
+                      {value}
+                    </RadixTable.RowHeaderCell>
+                  ))}
+                </RadixTable.Row>
+              );
+            })}
         </RadixTable.Body>
       </RadixTable.Root>
-      {!dataSource.length && (
-        <p className={styles["empty"]}>There are not any results</p>
+      {isLoading && (
+        <div className={styles["loading"]}>
+          <Spinner />
+        </div>
       )}
 
       <div className={styles["bottom"]}>

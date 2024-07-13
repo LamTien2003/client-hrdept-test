@@ -2,12 +2,11 @@ import * as yup from "yup";
 import { Dialog as RadixDialog } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
-import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import config from "@/config";
 import { UserForm } from "@/components";
-import axiosClient from "@/services/axiosClient";
+import useAddUser from "@/hooks/useAddUser";
 
 const schema = yup
   .object({
@@ -40,36 +39,19 @@ const AddUserForm = ({
     },
     resolver: yupResolver(schema),
   });
-
-  const onAddUser = async (data: any) => {
-    const formData = new FormData();
-    formData.append("email", data.email);
-    formData.append("phoneNumber", data.phoneNumber);
-    formData.append("firstName", data.firstName);
-    formData.append("lastName", data.lastName);
-    formData.append("role", data.role);
-    formData.append("image", data.image);
-
-    try {
-      const response = await axiosClient.post("user", formData);
-      setFilterCriteria({
-        filters: {
-          searchText: "",
-          role: "",
-        },
-        paging: {
-          page: 1,
-          pageSize: 5,
-        },
-      });
-      reset();
-      toast.success("Create User Successfully");
-      console.log(response);
-    } catch (error: any) {
-      toast.error(error.message);
-      throw error.message;
-    }
-  };
+  const { onAddUser, isAddingUser } = useAddUser(() => {
+    setFilterCriteria({
+      filters: {
+        searchText: "",
+        role: "",
+      },
+      paging: {
+        page: 1,
+        pageSize: 5,
+      },
+    });
+    reset();
+  });
 
   return (
     <form onSubmit={handleSubmit(onAddUser)}>
@@ -79,6 +61,7 @@ const AddUserForm = ({
       </RadixDialog.Description>
 
       <UserForm
+        isLoading={isAddingUser}
         control={control}
         handleSubmit={handleSubmit(onAddUser)}
         inputFileRef={inputFileRef}

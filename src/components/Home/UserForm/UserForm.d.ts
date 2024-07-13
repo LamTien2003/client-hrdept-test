@@ -12,4 +12,5 @@ export interface UserFormProps {
   control: Control<any>;
   setValue: SetFieldValue;
   inputFileRef: Ref;
+  isLoading?: boolean;
 }

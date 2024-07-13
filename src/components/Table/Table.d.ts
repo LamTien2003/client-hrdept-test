@@ -10,10 +10,11 @@ export interface TableColumn extends TableValue {
 }
 
 export default interface TableProps {
-  reference?: Ref;
   filterCriteria: any;
   setFilterCriteria: (value: any) => void;
   columns: TableColumn[];
   dataSource: any;
   totalItems: number;
+  reference?: Ref;
+  isLoading?: boolean;
 }

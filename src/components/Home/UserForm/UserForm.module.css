@@ -21,6 +21,13 @@
   gap: 2rem;
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+
 @media (max-width: 768px) {
   .user {
     display: flex;

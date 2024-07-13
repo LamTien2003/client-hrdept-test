@@ -1,14 +1,13 @@
 import { Dialog as RadixDialog } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
-import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { UserForm } from "@/components";
-import axiosClient from "@/services/axiosClient";
 
 import EditUserFormProps from "@/components/Home/EditUserForm/EditUserForm.d";
+import useEditUser from "@/hooks/useEditUser";
 
 const schema = yup
   .object({
@@ -30,34 +29,18 @@ const EditUserForm = ({ user, setFilterCriteria }: EditUserFormProps) => {
     resolver: yupResolver(schema),
   });
 
-  const onEditUser = async (data: any) => {
-    const formData = new FormData();
-    formData.append("email", data.email);
-    formData.append("phoneNumber", data.phoneNumber);
-    formData.append("firstName", data.firstName);
-    formData.append("lastName", data.lastName);
-    formData.append("role", data.role);
-    formData.append("image", data.image);
-
-    try {
-      const response = await axiosClient.patch(`user/${user._id}`, formData);
-      toast.success("Edit User Successfully");
-      setFilterCriteria({
-        filters: {
-          searchText: "",
-          role: "",
-        },
-        paging: {
-          page: 1,
-          pageSize: 5,
-        },
-      });
-      console.log(response);
-    } catch (error: any) {
-      toast.error(error.message);
-      throw error.message;
-    }
-  };
+  const { onEditUser, isEditingUser } = useEditUser(() => {
+    setFilterCriteria({
+      filters: {
+        searchText: "",
+        role: "",
+      },
+      paging: {
+        page: 1,
+        pageSize: 5,
+      },
+    });
+  });
 
   return (
     <form onSubmit={handleSubmit(onEditUser)}>
@@ -67,6 +50,7 @@ const EditUserForm = ({ user, setFilterCriteria }: EditUserFormProps) => {
       </RadixDialog.Description>
 
       <UserForm
+        isLoading={isEditingUser}
         formState={formState}
         control={control}
         handleSubmit={handleSubmit(onEditUser)}
