@@ -12,10 +12,10 @@ import {
   Table,
   Select,
 } from "@/components";
+import useGetUsers from "@/hooks/useGetUsers";
 import { convertToTitleCase } from "@/utils/helper";
 
 import { FilterCriteria, Role, User } from "@/types/common";
-import useGetUsers from "@/hooks/useGetUsers";
 import styles from "./Home.module.css";
 
 const Home = () => {

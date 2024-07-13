@@ -5,9 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { UserForm } from "@/components";
-
-import EditUserFormProps from "@/components/Home/EditUserForm/EditUserForm.d";
 import useEditUser from "@/hooks/useEditUser";
+
+import EditUserFormProps from "./EditUserForm.d";
 
 const schema = yup
   .object({
