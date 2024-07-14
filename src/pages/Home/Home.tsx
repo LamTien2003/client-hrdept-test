@@ -159,14 +159,14 @@ const Home = () => {
           <strong>Users</strong>
           <div className={styles["main-head__action"]}>
             <Button color="gray" highContrast onClick={onExportUsers}>
-              Export all users Excel
+              Export all users
             </Button>
             <Button
               color="gray"
               highContrast
               onClick={() => onExportThisPage(filterCriteria)}
             >
-              Export this page to Excel
+              Export this page
             </Button>
             <Dialog
               content={<AddUserForm setFilterCriteria={setFilterCriteria} />}
