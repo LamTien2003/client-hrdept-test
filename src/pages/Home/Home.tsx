@@ -10,6 +10,7 @@ import {
   Table,
   SearchForm,
 } from "@/components";
+import useExportUsers from "@/hooks/useExportUser";
 import useGetUsers from "@/hooks/useGetUsers";
 
 import { FilterCriteria, User } from "@/types/common";
@@ -38,11 +39,12 @@ const Home = () => {
     ascending: true,
   });
 
-  const { onDownload } = useDownloadExcel({
+  const { onDownload: onExportThisPage } = useDownloadExcel({
     currentTableRef: tableRef.current,
     filename: "Users table",
     sheet: "Users",
   });
+  const { onExportUsers } = useExportUsers();
 
   const applyFilter = useCallback(
     (key: keyof User) => {
@@ -161,8 +163,11 @@ const Home = () => {
         <div className={styles["main-head"]}>
           <strong>Users</strong>
           <div className={styles["main-head__action"]}>
-            <Button color="gray" highContrast onClick={onDownload}>
-              Export to Excel
+            <Button color="gray" highContrast onClick={onExportUsers}>
+              Export all users Excel
+            </Button>
+            <Button color="gray" highContrast onClick={onExportThisPage}>
+              Export this page to Excel
             </Button>
             <Dialog
               content={<AddUserForm setFilterCriteria={setFilterCriteria} />}
