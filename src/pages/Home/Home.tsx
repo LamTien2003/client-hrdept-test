@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Pencil2Icon } from "@radix-ui/react-icons";
-import { useDownloadExcel } from "react-export-table-to-excel";
 
 import {
   Button,
@@ -39,12 +38,8 @@ const Home = () => {
     ascending: true,
   });
 
-  const { onDownload: onExportThisPage } = useDownloadExcel({
-    currentTableRef: tableRef.current,
-    filename: "Users table",
-    sheet: "Users",
-  });
-  const { onExportUsers } = useExportUsers();
+  const { onExportUsers, onExportUsersByFilter: onExportThisPage } =
+    useExportUsers();
 
   const applyFilter = useCallback(
     (key: keyof User) => {
@@ -166,7 +161,11 @@ const Home = () => {
             <Button color="gray" highContrast onClick={onExportUsers}>
               Export all users Excel
             </Button>
-            <Button color="gray" highContrast onClick={onExportThisPage}>
+            <Button
+              color="gray"
+              highContrast
+              onClick={() => onExportThisPage(filterCriteria)}
+            >
               Export this page to Excel
             </Button>
             <Dialog

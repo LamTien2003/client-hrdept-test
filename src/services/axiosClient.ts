@@ -3,8 +3,7 @@ import { getToken } from "@/utils/storage";
 import { toast } from "react-toastify";
 
 const axiosClient = axios.create({
-  // baseURL: "https://server-hrdept-test.onrender.com/",
-  baseURL: "http://localhost:3000/",
+  baseURL: "https://server-hrdept-test.onrender.com/",
 });
 
 // Add a request interceptor
