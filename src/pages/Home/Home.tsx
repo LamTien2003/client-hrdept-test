@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Pencil2Icon } from "@radix-ui/react-icons";
-import { useForm } from "react-hook-form";
 import { useDownloadExcel } from "react-export-table-to-excel";
 
 import {
@@ -8,14 +7,12 @@ import {
   Dialog,
   AddUserForm,
   EditUserForm,
-  Input,
   Table,
-  Select,
+  SearchForm,
 } from "@/components";
 import useGetUsers from "@/hooks/useGetUsers";
-import { convertToTitleCase } from "@/utils/helper";
 
-import { FilterCriteria, Role, User } from "@/types/common";
+import { FilterCriteria, User } from "@/types/common";
 import styles from "./Home.module.css";
 
 const Home = () => {
@@ -41,31 +38,11 @@ const Home = () => {
     ascending: true,
   });
 
-  const { handleSubmit, control } = useForm<{
-    searchText: "";
-    role: Role | "none";
-  }>({
-    defaultValues: {
-      searchText: "",
-      role: "none",
-    },
-  });
-
   const { onDownload } = useDownloadExcel({
     currentTableRef: tableRef.current,
     filename: "Users table",
     sheet: "Users",
   });
-
-  const onSearch = (data: any) => {
-    setFilterCriteria((prev: any) => ({
-      ...prev,
-      filters: {
-        searchText: data?.searchText || "",
-        role: data?.role || "",
-      },
-    }));
-  };
 
   const applyFilter = useCallback(
     (key: keyof User) => {
@@ -109,20 +86,6 @@ const Home = () => {
       ),
     }));
   }, [users, sorting]);
-
-  const roleList = useMemo(
-    () => [
-      {
-        label: "All Role",
-        value: "none",
-      },
-      ...Object.entries(Role).map(([key, value]) => ({
-        label: convertToTitleCase(key),
-        value,
-      })),
-    ],
-    []
-  );
 
   const columns = useMemo(
     () => [
@@ -211,26 +174,7 @@ const Home = () => {
           </div>
         </div>
 
-        <form
-          className={styles["main__search"]}
-          onSubmit={handleSubmit(onSearch)}
-        >
-          <Input
-            control={control}
-            name="searchText"
-            placeholder="Search users"
-          />
-          <Select
-            name="role"
-            control={control}
-            dataSource={roleList}
-            size="2"
-          />
-          <Button color="gray" highContrast onSubmit={handleSubmit(onSearch)}>
-            Search
-          </Button>
-        </form>
-
+        <SearchForm setFilterCriteria={setFilterCriteria} />
         <Table
           isLoading={isUsersLoading}
           reference={tableRef}

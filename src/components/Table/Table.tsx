@@ -65,10 +65,14 @@ const Table = ({
             })}
         </RadixTable.Body>
       </RadixTable.Root>
+
       {isLoading && (
         <div className={styles["loading"]}>
           <Spinner />
         </div>
+      )}
+      {!isLoading && dataSource.length === 0 && (
+        <div className={styles["loading"]}>There are no result</div>
       )}
 
       <div className={styles["bottom"]}>

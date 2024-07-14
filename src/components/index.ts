@@ -3,6 +3,7 @@ import Dialog from "@/components/Dialog/Dialog";
 import UserForm from "@/components/Home/UserForm";
 import AddUserForm from "@/components/Home/AddUserForm/AddUserForm";
 import EditUserForm from "@/components/Home/EditUserForm/EditUserForm";
+import SearchForm from "@/components/Home/SearchForm/SearchForm";
 import Input from "@/components/Input/Input";
 import Pagination from "@/components/Pagination/Pagination";
 import { Select } from "@/components/Select";
@@ -15,6 +16,7 @@ export {
   UserForm,
   AddUserForm,
   EditUserForm,
+  SearchForm,
   Input,
   Pagination,
   Select,
